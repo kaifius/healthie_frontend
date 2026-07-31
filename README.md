@@ -1,75 +1,47 @@
-# React + TypeScript + Vite
+# React Kanban Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A frontend-only Kanban board with three columns — To Do, Doing, and Done.
 
-Currently, two official plugins are available:
+- Cards are created through a form and must have a Rick and Morty character assigned. The character list is fetched from the [Rick and Morty GraphQL API](https://rickandmortyapi.com/graphql) on load.
+- Cards can be dragged between columns and reordered within a column.
+- Moving a card into Done (or creating one there) fires confetti.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Board state lives in memory (a `useReducer` in `Board.tsx`) and resets on reload.
 
-## React Compiler
+## Running it
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Requires Node 20.19+ or 22.12+ (Vite 8's minimum).
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the URL Vite prints, usually http://localhost:5173.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Other scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Command | What it does |
+| --- | --- |
+| `npm test` | Runs the unit tests once |
+| `npm run test:watch` | Runs them in watch mode |
+| `npm run build` | Type-checks and builds for production |
+| `npm run preview` | Serves the production build locally |
+| `npm run lint` | Runs ESLint |
+
+## Structure
 
 ```
+src/
+  components/    Board, Column, Card, AddCardForm, CharacterPicker
+  state/         boardReducer — every change to the board, plus its tests
+  hooks/         useCharacters — fetches the character list
+  api/           the GraphQL call
+  data/          seed board and the Done-column helpers
+```
+
+`Board` owns the board data and passes it down; `Column` and `Card` render what they're given. All state changes go through `boardReducer`, which is a plain function and is unit tested.
+
+## Built with
+
+React 19, TypeScript, Vite, [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) for drag and drop, [canvas-confetti](https://github.com/catdad/canvas-confetti), and Vitest.
