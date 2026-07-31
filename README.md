@@ -1,75 +1,44 @@
-# React + TypeScript + Vite
+# React Kanban Board
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A frontend-only Kanban board with three columns — To Do, Doing, and Done.
 
-Currently, two official plugins are available:
+- Cards are created through a form and must have a Rick and Morty character assigned to them. The character list is fetched from the [Rick and Morty GraphQL API](https://rickandmortyapi.com/graphql) on load.
+- Cards can be dragged between columns and reordered within a column.
+- Moving a card into Done fires confetti.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Board state lives in memory (a `useReducer` in `Board.tsx`) and resets on reload.
 
-## React Compiler
+Built with React 19, TypeScript, and Vite. Drag and drop uses [@hello-pangea/dnd](https://github.com/hello-pangea/dnd); confetti uses [canvas-confetti](https://github.com/catdad/canvas-confetti).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Running it
 
-## Expanding the ESLint configuration
+Requires Node 20+.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the URL Vite prints (usually http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Other scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm test           # run the unit tests once (Vitest)
+npm run test:watch # re-run tests on change
+npm run lint       # ESLint
+npm run build      # typecheck + production build to dist/
+npm run preview    # serve the production build
+```
 
+## Layout
+
+```
+src/
+  components/   Board, Column, Card, AddCardForm, CharacterPicker
+  state/        boardReducer — all board mutations, unit tested
+  api/          Rick and Morty GraphQL client
+  hooks/        useCharacters — fetch, loading, and error state
+  data/         seedBoard — starting cards, Done-column rules
+  celebrate.ts  confetti
 ```
