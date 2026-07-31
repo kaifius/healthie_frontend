@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useReducer } from 'react'
+import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import type { Board } from '../types'
+import { boardReducer } from '../state/boardReducer'
 import { Column } from './Column'
 import './Board.css'
 
@@ -9,36 +11,44 @@ type BoardProps = {
 }
 
 export function Board({ initialBoard }: BoardProps) {
-  const [board, setBoard] = useState(initialBoard)
+  const [board, dispatch] = useReducer(boardReducer, initialBoard)
 
   function handleAddCard(columnId: string, text: string) {
-    const card = { id: crypto.randomUUID(), text }
+    dispatch({
+      type: 'ADD_CARD',
+      columnId,
+      card: { id: crypto.randomUUID(), text },
+    })
+  }
 
-    setBoard((current) => ({
-      ...current,
-      columns: current.columns.map((column) =>
-        column.id === columnId
-          ? { ...column, cards: [...column.cards, card] }
-          : column,
-      ),
-    }))
+  function handleDragEnd({ draggableId, destination }: DropResult) {
+    if (!destination) return // dropped outside a column
+
+    dispatch({
+      type: 'MOVE_CARD',
+      cardId: draggableId,
+      toColumnId: destination.droppableId,
+      toIndex: destination.index,
+    })
   }
 
   return (
-    <div className="board">
-      <header className="board-header">
-        <h1 className="board-title">{board.title}</h1>
-      </header>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="board">
+        <header className="board-header">
+          <h1 className="board-title">{board.title}</h1>
+        </header>
 
-      <div className="board-columns">
-        {board.columns.map((column) => (
-          <Column
-            key={column.id}
-            column={column}
-            onAddCard={(text) => handleAddCard(column.id, text)}
-          />
-        ))}
+        <div className="board-columns">
+          {board.columns.map((column) => (
+            <Column
+              key={column.id}
+              column={column}
+              onAddCard={(text) => handleAddCard(column.id, text)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </DragDropContext>
   )
 }

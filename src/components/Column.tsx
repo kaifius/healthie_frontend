@@ -1,3 +1,4 @@
+import { Droppable } from '@hello-pangea/dnd'
 import type { Column } from '../types'
 import { Card } from './Card'
 import { AddCardForm } from './AddCardForm'
@@ -16,11 +17,24 @@ export function Column({ column, onAddCard }: ColumnProps) {
         <span className="column-count">{column.cards.length}</span>
       </header>
 
-      <ul className="column-cards">
-        {column.cards.map((card) => (
-          <Card key={card.id} card={card} />
-        ))}
-      </ul>
+      <Droppable droppableId={column.id}>
+        {(provided, snapshot) => (
+          <ul
+            ref={provided.innerRef}
+            className={
+              snapshot.isDraggingOver
+                ? 'column-cards column-cards--over'
+                : 'column-cards'
+            }
+            {...provided.droppableProps}
+          >
+            {column.cards.map((card, index) => (
+              <Card key={card.id} card={card} index={index} />
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
 
       <AddCardForm onAddCard={onAddCard} />
     </section>
