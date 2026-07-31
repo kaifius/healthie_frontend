@@ -1,20 +1,28 @@
 import { useState, type FormEvent } from 'react'
+import type { CharactersState } from '../hooks/useCharacters'
+import { CharacterPicker } from './CharacterPicker'
 import './AddCardForm.css'
 
 type AddCardFormProps = {
-  onAddCard: (text: string) => void
+  characters: CharactersState
+  onAddCard: (text: string, characterId: string) => void
 }
 
-export function AddCardForm({ onAddCard }: AddCardFormProps) {
+export function AddCardForm({ characters, onAddCard }: AddCardFormProps) {
   const [text, setText] = useState('')
+  const [characterId, setCharacterId] = useState('')
+
   const trimmed = text.trim()
+  // Every card must have a character, so both fields are required.
+  const canSubmit = trimmed !== '' && characterId !== ''
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    if (!trimmed) return
+    if (!canSubmit) return
 
-    onAddCard(trimmed)
+    onAddCard(trimmed, characterId)
     setText('')
+    setCharacterId('')
   }
 
   return (
@@ -26,8 +34,15 @@ export function AddCardForm({ onAddCard }: AddCardFormProps) {
         placeholder="Add a card…"
         aria-label="New card text"
       />
-      <button className="add-card-button" type="submit" disabled={!trimmed}>
-        Add
+
+      <CharacterPicker
+        characters={characters}
+        value={characterId}
+        onChange={setCharacterId}
+      />
+
+      <button className="add-card-button" type="submit" disabled={!canSubmit}>
+        Add card
       </button>
     </form>
   )

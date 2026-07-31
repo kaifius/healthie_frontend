@@ -1,15 +1,17 @@
 import { Droppable } from '@hello-pangea/dnd'
 import type { Column } from '../types'
+import type { CharactersState } from '../hooks/useCharacters'
 import { Card } from './Card'
 import { AddCardForm } from './AddCardForm'
 import './Column.css'
 
 type ColumnProps = {
   column: Column
-  onAddCard: (text: string) => void
+  characters: CharactersState
+  onAddCard: (text: string, characterId: string) => void
 }
 
-export function Column({ column, onAddCard }: ColumnProps) {
+export function Column({ column, characters, onAddCard }: ColumnProps) {
   return (
     <section className="column">
       <header className="column-header">
@@ -29,14 +31,19 @@ export function Column({ column, onAddCard }: ColumnProps) {
             {...provided.droppableProps}
           >
             {column.cards.map((card, index) => (
-              <Card key={card.id} card={card} index={index} />
+              <Card
+                key={card.id}
+                card={card}
+                index={index}
+                character={characters.byId.get(card.characterId)}
+              />
             ))}
             {provided.placeholder}
           </ul>
         )}
       </Droppable>
 
-      <AddCardForm onAddCard={onAddCard} />
+      <AddCardForm characters={characters} onAddCard={onAddCard} />
     </section>
   )
 }

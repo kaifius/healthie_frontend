@@ -2,6 +2,7 @@ import { useReducer } from 'react'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import type { Board } from '../types'
 import { boardReducer } from '../state/boardReducer'
+import { useCharacters } from '../hooks/useCharacters'
 import { DONE_COLUMN_ID } from '../data/seedBoard'
 import { celebrate } from '../celebrate'
 import { Column } from './Column'
@@ -14,12 +15,13 @@ type BoardProps = {
 
 export function Board({ initialBoard }: BoardProps) {
   const [board, dispatch] = useReducer(boardReducer, initialBoard)
+  const characters = useCharacters()
 
-  function handleAddCard(columnId: string, text: string) {
+  function handleAddCard(columnId: string, text: string, characterId: string) {
     dispatch({
       type: 'ADD_CARD',
       columnId,
-      card: { id: crypto.randomUUID(), text },
+      card: { id: crypto.randomUUID(), text, characterId },
     })
 
     if (columnId === DONE_COLUMN_ID) celebrate()
@@ -56,7 +58,10 @@ export function Board({ initialBoard }: BoardProps) {
             <Column
               key={column.id}
               column={column}
-              onAddCard={(text) => handleAddCard(column.id, text)}
+              characters={characters}
+              onAddCard={(text, characterId) =>
+                handleAddCard(column.id, text, characterId)
+              }
             />
           ))}
         </div>

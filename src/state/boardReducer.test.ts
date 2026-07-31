@@ -10,17 +10,17 @@ function makeBoard(): Board {
         id: 'todo',
         title: 'To Do',
         cards: [
-          { id: 'a', text: 'a' },
-          { id: 'b', text: 'b' },
-          { id: 'c', text: 'c' },
+          { id: 'a', text: 'a', characterId: 'cha' },
+          { id: 'b', text: 'b', characterId: 'chb' },
+          { id: 'c', text: 'c', characterId: 'chc' },
         ],
       },
       {
         id: 'doing',
         title: 'Doing',
         cards: [
-          { id: 'x', text: 'x' },
-          { id: 'y', text: 'y' },
+          { id: 'x', text: 'x', characterId: 'chx' },
+          { id: 'y', text: 'y', characterId: 'chy' },
         ],
       },
       { id: 'done', title: 'Done', cards: [] },
@@ -40,7 +40,7 @@ describe('ADD_CARD', () => {
     const next = boardReducer(makeBoard(), {
       type: 'ADD_CARD',
       columnId: 'doing',
-      card: { id: 'new', text: 'new' },
+      card: { id: 'new', text: 'new', characterId: 'chnew' },
     })
 
     expect(layout(next)).toBe('todo[a,b,c] doing[x,y,new] done[]')
@@ -50,7 +50,7 @@ describe('ADD_CARD', () => {
     const next = boardReducer(makeBoard(), {
       type: 'ADD_CARD',
       columnId: 'done',
-      card: { id: 'new', text: 'new' },
+      card: { id: 'new', text: 'new', characterId: 'chnew' },
     })
 
     expect(layout(next)).toBe('todo[a,b,c] doing[x,y] done[new]')
@@ -60,7 +60,7 @@ describe('ADD_CARD', () => {
     const next = boardReducer(makeBoard(), {
       type: 'ADD_CARD',
       columnId: 'nope',
-      card: { id: 'new', text: 'new' },
+      card: { id: 'new', text: 'new', characterId: 'chnew' },
     })
 
     expect(layout(next)).toBe(layout(makeBoard()))
