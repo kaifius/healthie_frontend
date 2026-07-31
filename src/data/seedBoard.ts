@@ -1,5 +1,8 @@
 import type { Board } from '../types'
 
+/** The one column with behaviour attached to it — reaching it is celebrated. */
+export const DONE_COLUMN_ID = 'done'
+
 export const seedBoard: Board = {
   title: 'Project Board',
   columns: [
@@ -26,7 +29,7 @@ export const seedBoard: Board = {
       ],
     },
     {
-      id: 'done',
+      id: DONE_COLUMN_ID,
       title: 'Done',
       cards: [{ id: 'c8', text: 'Set up CI on the new repo' }],
     },

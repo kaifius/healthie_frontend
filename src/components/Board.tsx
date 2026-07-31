@@ -2,6 +2,8 @@ import { useReducer } from 'react'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import type { Board } from '../types'
 import { boardReducer } from '../state/boardReducer'
+import { DONE_COLUMN_ID } from '../data/seedBoard'
+import { celebrate } from '../celebrate'
 import { Column } from './Column'
 import './Board.css'
 
@@ -19,9 +21,11 @@ export function Board({ initialBoard }: BoardProps) {
       columnId,
       card: { id: crypto.randomUUID(), text },
     })
+
+    if (columnId === DONE_COLUMN_ID) celebrate()
   }
 
-  function handleDragEnd({ draggableId, destination }: DropResult) {
+  function handleDragEnd({ draggableId, source, destination }: DropResult) {
     if (!destination) return // dropped outside a column
 
     dispatch({
@@ -30,6 +34,14 @@ export function Board({ initialBoard }: BoardProps) {
       toColumnId: destination.droppableId,
       toIndex: destination.index,
     })
+
+    // Entering Done, not merely being reordered inside it.
+    if (
+      source.droppableId !== DONE_COLUMN_ID &&
+      destination.droppableId === DONE_COLUMN_ID
+    ) {
+      celebrate()
+    }
   }
 
   return (
