@@ -22,7 +22,8 @@
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  /* Columns keep their width and scroll sideways rather than squashing. */
-  overflow-x: auto;
   padding-bottom: var(--space-3);
+  /* No overflow here on purpose: each column's card list is its own scroll
+     container, and a Droppable may not sit inside a second one. Horizontal
+     overflow falls through to the window, which the library handles. */
 }
