@@ -52,6 +52,11 @@ export function boardReducer(board: Board, action: BoardAction): Board {
       const card = findCard(board, action.cardId)
       if (!card) return board
 
+      const destinationExists = board.columns.some(
+        (column) => column.id === action.toColumnId,
+      )
+      if (!destinationExists) return board
+
       // Remove first, then insert — so a move within one column and a move
       // across two are the same operation.
       const withoutCard = board.columns.map((column) => ({
