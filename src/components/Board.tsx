@@ -3,7 +3,7 @@ import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import type { Board } from '../types'
 import { boardReducer } from '../state/boardReducer'
 import { useCharacters } from '../hooks/useCharacters'
-import { DONE_COLUMN_ID } from '../data/seedBoard'
+import { DONE_COLUMN_ID, isEnteringDone } from '../data/seedBoard'
 import { celebrate } from '../celebrate'
 import { Column } from './Column'
 import './Board.css'
@@ -37,11 +37,7 @@ export function Board({ initialBoard }: BoardProps) {
       toIndex: destination.index,
     })
 
-    // Entering Done, not merely being reordered inside it.
-    if (
-      source.droppableId !== DONE_COLUMN_ID &&
-      destination.droppableId === DONE_COLUMN_ID
-    ) {
+    if (isEnteringDone(source.droppableId, destination.droppableId)) {
       celebrate()
     }
   }

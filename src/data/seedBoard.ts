@@ -3,6 +3,14 @@ import type { Board } from '../types'
 /** The one column with behaviour attached to it — reaching it is celebrated. */
 export const DONE_COLUMN_ID = 'done'
 
+/**
+ * True only when a card *arrives* in Done. Reordering inside Done, leaving it,
+ * or any move that doesn't involve it are all silent.
+ */
+export function isEnteringDone(fromColumnId: string, toColumnId: string) {
+  return fromColumnId !== DONE_COLUMN_ID && toColumnId === DONE_COLUMN_ID
+}
+
 export const seedBoard: Board = {
   title: 'Project Board',
   columns: [
