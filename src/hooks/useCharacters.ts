@@ -20,7 +20,7 @@ export function useCharacters(): CharactersState {
     // Aborts on unmount, and on StrictMode's deliberate double-run in dev.
     const controller = new AbortController()
 
-    fetchCharacters(controller.signal)
+    fetchCharacters(null, controller.signal)
       .then((characters) => {
         setList(characters)
         setError(null)

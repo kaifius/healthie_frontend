@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import type { CharactersState } from '../hooks/useCharacters'
+import { CharacterPicker } from './CharacterPicker'
 import './AddCardForm.css'
 
 type AddCardFormProps = {
@@ -34,28 +35,11 @@ export function AddCardForm({ characters, onAddCard }: AddCardFormProps) {
         aria-label="New card text"
       />
 
-      <select
-        className="add-card-select"
+      <CharacterPicker
+        characters={characters}
         value={characterId}
-        onChange={(event) => setCharacterId(event.target.value)}
-        disabled={characters.loading || characters.error !== null}
-        aria-label="Assign a character"
-      >
-        <option value="">
-          {characters.loading ? 'Loading characters…' : 'Assign a character…'}
-        </option>
-        {characters.list.map((character) => (
-          <option key={character.id} value={character.id}>
-            {character.name}
-          </option>
-        ))}
-      </select>
-
-      {characters.error && (
-        <p className="add-card-error" role="alert">
-          Couldn’t load characters: {characters.error}
-        </p>
-      )}
+        onChange={setCharacterId}
+      />
 
       <button className="add-card-button" type="submit" disabled={!canSubmit}>
         Add card

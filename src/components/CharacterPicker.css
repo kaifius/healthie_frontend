@@ -1,13 +1,10 @@
-.add-card-form {
-  flex-shrink: 0;
+.character-picker {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3) var(--space-3);
 }
 
-.add-card-input,
-.add-card-button {
+.character-picker-select {
   width: 100%;
   padding: var(--space-2);
   background: var(--surface);
@@ -18,16 +15,20 @@
   font-size: 14px;
 }
 
-.add-card-input::placeholder {
-  color: var(--text-muted);
-}
-
-.add-card-button {
-  cursor: pointer;
-}
-
-.add-card-button:disabled {
+.character-picker-select:disabled {
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.character-picker-error {
+  margin: 0;
+  font-size: 13px;
+  color: #c9372c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .character-picker-error {
+    color: #ff9c8f;
+  }
 }
