@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import type { Board } from '../types'
 import { Column } from './Column'
 import './Board.css'
 
 type BoardProps = {
-  board: Board
+  /** Only read on first render; later changes to this prop are ignored. */
+  initialBoard: Board
 }
 
-export function Board({ board }: BoardProps) {
+export function Board({ initialBoard }: BoardProps) {
+  const [board] = useState(initialBoard)
+
   return (
     <div className="board">
       <header className="board-header">
