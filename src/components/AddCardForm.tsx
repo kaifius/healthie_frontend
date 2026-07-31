@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type SubmitEvent } from 'react'
 import type { CharactersState } from '../hooks/useCharacters'
 import { CharacterPicker } from './CharacterPicker'
 import './AddCardForm.css'
@@ -16,7 +16,7 @@ export function AddCardForm({ characters, onAddCard }: AddCardFormProps) {
   // Every card must have a character, so both fields are required.
   const canSubmit = trimmed !== '' && characterId !== ''
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!canSubmit) return
 
