@@ -1,12 +1,14 @@
 import type { Column } from '../types'
 import { Card } from './Card'
+import { AddCardForm } from './AddCardForm'
 import './Column.css'
 
 type ColumnProps = {
   column: Column
+  onAddCard: (text: string) => void
 }
 
-export function Column({ column }: ColumnProps) {
+export function Column({ column, onAddCard }: ColumnProps) {
   return (
     <section className="column">
       <header className="column-header">
@@ -19,6 +21,8 @@ export function Column({ column }: ColumnProps) {
           <Card key={card.id} card={card} />
         ))}
       </ul>
+
+      <AddCardForm onAddCard={onAddCard} />
     </section>
   )
 }

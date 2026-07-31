@@ -9,7 +9,20 @@ type BoardProps = {
 }
 
 export function Board({ initialBoard }: BoardProps) {
-  const [board] = useState(initialBoard)
+  const [board, setBoard] = useState(initialBoard)
+
+  function handleAddCard(columnId: string, text: string) {
+    const card = { id: crypto.randomUUID(), text }
+
+    setBoard((current) => ({
+      ...current,
+      columns: current.columns.map((column) =>
+        column.id === columnId
+          ? { ...column, cards: [...column.cards, card] }
+          : column,
+      ),
+    }))
+  }
 
   return (
     <div className="board">
@@ -19,7 +32,11 @@ export function Board({ initialBoard }: BoardProps) {
 
       <div className="board-columns">
         {board.columns.map((column) => (
-          <Column key={column.id} column={column} />
+          <Column
+            key={column.id}
+            column={column}
+            onAddCard={(text) => handleAddCard(column.id, text)}
+          />
         ))}
       </div>
     </div>
