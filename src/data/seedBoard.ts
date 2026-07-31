@@ -10,28 +10,35 @@ export const seedBoard: Board = {
       id: 'todo',
       title: 'To Do',
       cards: [
-        { id: 'c1', text: 'Write onboarding docs' },
-        { id: 'c2', text: 'Audit unused dependencies' },
+        { id: 'c1', text: 'Write onboarding docs', characterId: '1' },
+        { id: 'c2', text: 'Audit unused dependencies', characterId: '2' },
         {
           id: 'c3',
           text: 'Investigate the slow dashboard query',
+          characterId: '3',
         },
-        { id: 'c4', text: 'Update the error page copy' },
+        { id: 'c4', text: 'Update the error page copy', characterId: '4' },
       ],
     },
     {
       id: 'doing',
       title: 'Doing',
       cards: [
-        { id: 'c5', text: 'Add keyboard shortcuts to the editor' },
-        { id: 'c6', text: 'Fix flaky checkout test' },
-        { id: 'c7', text: 'Review the API pagination PR' },
+        {
+          id: 'c5',
+          text: 'Add keyboard shortcuts to the editor',
+          characterId: '5',
+        },
+        { id: 'c6', text: 'Fix flaky checkout test', characterId: '6' },
+        { id: 'c7', text: 'Review the API pagination PR', characterId: '7' },
       ],
     },
     {
       id: DONE_COLUMN_ID,
       title: 'Done',
-      cards: [{ id: 'c8', text: 'Set up CI on the new repo' }],
+      cards: [
+        { id: 'c8', text: 'Set up CI on the new repo', characterId: '8' },
+      ],
     },
   ],
 }

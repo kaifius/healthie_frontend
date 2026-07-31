@@ -1,6 +1,16 @@
+export type Character = {
+  id: string
+  name: string
+  image: string
+  species: string
+  status: string
+}
+
 export type Card = {
   id: string
   text: string
+  /** Refers to a Character; the characters themselves are fetched, not stored. */
+  characterId: string
 }
 
 export type Column = {

@@ -1,13 +1,15 @@
 .add-card-form {
   flex-shrink: 0;
   display: flex;
+  flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3) var(--space-3);
 }
 
-.add-card-input {
-  flex: 1;
-  min-width: 0;
+.add-card-input,
+.add-card-select,
+.add-card-button {
+  width: 100%;
   padding: var(--space-2);
   background: var(--surface);
   color: inherit;
@@ -22,19 +24,24 @@
 }
 
 .add-card-button {
-  flex-shrink: 0;
-  padding: var(--space-2) var(--space-3);
-  background: var(--surface);
-  color: inherit;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font: inherit;
-  font-size: 14px;
   cursor: pointer;
 }
 
-.add-card-button:disabled {
+.add-card-button:disabled,
+.add-card-select:disabled {
   color: var(--text-muted);
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.add-card-error {
+  margin: 0;
+  font-size: 13px;
+  color: #c9372c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .add-card-error {
+    color: #ff9c8f;
+  }
 }

@@ -1,4 +1,7 @@
 .card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   padding: var(--space-3);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -19,4 +22,22 @@
 .card--dragging {
   cursor: grabbing;
   box-shadow: 0 8px 20px rgba(9, 30, 66, 0.25);
+}
+
+.card-text {
+  margin: 0;
+}
+
+.card-character {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.card-avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
 }
