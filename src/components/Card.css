@@ -1,0 +1,11 @@
+.card {
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  font-size: 15px;
+  line-height: 1.4;
+  /* Long unbroken strings wrap instead of widening the column. */
+  overflow-wrap: anywhere;
+}
