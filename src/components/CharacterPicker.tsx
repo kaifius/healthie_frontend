@@ -35,7 +35,7 @@ export function CharacterPicker({
 
       {error && (
         <p className="character-picker-error" role="alert">
-          Couldn’t load characters: {error}
+          Couldn't load characters: {error}
         </p>
       )}
     </div>
