@@ -31,9 +31,9 @@ export function findCard(board: Board, cardId: string): Card | undefined {
 }
 
 function insertAt(cards: Card[], index: number, card: Card): Card[] {
-  const next = [...cards]
-  next.splice(Math.min(Math.max(index, 0), next.length), 0, card)
-  return next
+  const updatedCards = [...cards]
+  updatedCards.splice(Math.min(Math.max(index, 0), updatedCards.length), 0, card)
+  return updatedCards
 }
 
 export function boardReducer(board: Board, action: BoardAction): Board {
