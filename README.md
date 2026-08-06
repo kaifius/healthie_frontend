@@ -5,6 +5,7 @@ A frontend-only Kanban board with three columns — To Do, Doing, and Done.
 - Cards are created through a form and must have a Rick and Morty character assigned. The character list is fetched from the [Rick and Morty GraphQL API](https://rickandmortyapi.com/graphql) on load.
 - Cards can be dragged between columns and reordered within a column.
 - Moving a card into Done (or creating one there) fires confetti.
+- Adds and moves can be undone, one at a time, with the Undo button or ⌘Z / Ctrl+Z.
 
 Board state lives in memory (a `useReducer` in `Board.tsx`) and resets on reload.
 
@@ -33,7 +34,7 @@ Then open the URL Vite prints, usually http://localhost:5173.
 
 ```
 src/
-  components/    Board, Column, Card, AddCardForm, CharacterPicker
+  components/    Board, Column, Card, AddCardForm, CharacterPicker, Undo
   state/         boardReducer — every change to the board, plus its tests
   hooks/         useCharacters — fetches the character list
   api/           the GraphQL call

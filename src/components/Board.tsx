@@ -1,11 +1,12 @@
 import { useReducer } from 'react'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 import type { Board } from '../types'
-import { boardReducer } from '../state/boardReducer'
+import { boardReducer, createBoardState } from '../state/boardReducer'
 import { useCharacters } from '../hooks/useCharacters'
 import { DONE_COLUMN_ID, isEnteringDone } from '../data/seedBoard'
 import { celebrate } from '../celebrate'
 import { Column } from './Column'
+import { Undo } from './Undo'
 import './Board.css'
 
 type BoardProps = {
@@ -14,8 +15,17 @@ type BoardProps = {
 }
 
 export function Board({ initialBoard }: BoardProps) {
-  const [board, dispatch] = useReducer(boardReducer, initialBoard)
+  const [{ board, history }, dispatch] = useReducer(
+    boardReducer,
+    initialBoard,
+    createBoardState,
+  )
   const characters = useCharacters()
+
+  function handleUndo() {
+    // The reducer owns the history, so it pops the last action itself.
+    dispatch({ type: 'UNDO' })
+  }
 
   function handleAddCard(columnId: string, text: string, characterId: string) {
     dispatch({
@@ -33,6 +43,8 @@ export function Board({ initialBoard }: BoardProps) {
     dispatch({
       type: 'MOVE_CARD',
       cardId: draggableId,
+      fromColumnId: source.droppableId,
+      fromIndex: source.index,
       toColumnId: destination.droppableId,
       toIndex: destination.index,
     })
@@ -47,6 +59,7 @@ export function Board({ initialBoard }: BoardProps) {
       <div className="board">
         <header className="board-header">
           <h1 className="board-title">{board.title}</h1>
+          <Undo canUndo={history.length > 0} onUndo={handleUndo} />
         </header>
 
         <div className="board-columns">

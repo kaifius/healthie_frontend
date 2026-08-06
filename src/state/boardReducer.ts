@@ -1,6 +1,7 @@
 import type { Board, Card, Column } from '../types'
 
-export type BoardAction =
+/** An action that changes the board, and that undo knows how to reverse. */
+export type UndoableAction =
   | {
       type: 'ADD_CARD'
       columnId: string
@@ -10,10 +11,26 @@ export type BoardAction =
   | {
       type: 'MOVE_CARD'
       cardId: string
+      /** Where the card came from — only used to reverse the move. */
+      fromColumnId: string
+      /** Index within the source column *before* the card is removed. */
+      fromIndex: number
       toColumnId: string
       /** Index within the destination column *after* the card is removed. */
       toIndex: number
     }
+
+export type BoardAction = UndoableAction | { type: 'UNDO' }
+
+export type BoardState = {
+  board: Board
+  /** Applied actions, oldest first. The last one is the next to be undone. */
+  history: UndoableAction[]
+}
+
+export function createBoardState(board: Board): BoardState {
+  return { board, history: [] }
+}
 
 export function findColumnByCardId(
   board: Board,
@@ -36,9 +53,15 @@ function insertAt(cards: Card[], index: number, card: Card): Card[] {
   return updatedCards
 }
 
-export function boardReducer(board: Board, action: BoardAction): Board {
+/** Returns the board unchanged if the action cannot be applied. */
+function applyAction(board: Board, action: UndoableAction): Board {
   switch (action.type) {
-    case 'ADD_CARD':
+    case 'ADD_CARD': {
+      const columnExists = board.columns.some(
+        (column) => column.id === action.columnId,
+      )
+      if (!columnExists) return board
+
       return {
         ...board,
         columns: board.columns.map((column) =>
@@ -47,6 +70,7 @@ export function boardReducer(board: Board, action: BoardAction): Board {
             : column,
         ),
       }
+    }
 
     case 'MOVE_CARD': {
       const card = findCard(board, action.cardId)
@@ -77,4 +101,58 @@ export function boardReducer(board: Board, action: BoardAction): Board {
     default:
       return board
   }
+}
+
+/**
+ * Applies the opposite of an action. Only correct for the action that was
+ * applied last, which is the only one undo ever reverses.
+ */
+function reverseAction(board: Board, action: UndoableAction): Board {
+  switch (action.type) {
+    case 'ADD_CARD':
+      return {
+        ...board,
+        columns: board.columns.map((column) =>
+          column.id === action.columnId
+            ? {
+                ...column,
+                cards: column.cards.filter((card) => card.id !== action.card.id),
+              }
+            : column,
+        ),
+      }
+
+    case 'MOVE_CARD':
+      // Put it back where it came from: the same move, the other way.
+      return applyAction(board, {
+        type: 'MOVE_CARD',
+        cardId: action.cardId,
+        fromColumnId: action.toColumnId,
+        fromIndex: action.toIndex,
+        toColumnId: action.fromColumnId,
+        toIndex: action.fromIndex,
+      })
+  }
+}
+
+export function boardReducer(
+  state: BoardState,
+  action: BoardAction,
+): BoardState {
+  if (action.type === 'UNDO') {
+    const lastAction = state.history.at(-1)
+    if (!lastAction) return state
+
+    return {
+      board: reverseAction(state.board, lastAction),
+      history: state.history.slice(0, -1),
+    }
+  }
+
+  const board = applyAction(state.board, action)
+
+  // A no-op action must not cost an undo step.
+  if (board === state.board) return state
+
+  return { board, history: [...state.history, action] }
 }
